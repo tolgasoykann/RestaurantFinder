@@ -1,11 +1,22 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
+
 public class RestaurantBST {
     private BSTNode root;
+    private List<Restaurant> allRestaurants;
+
+    public RestaurantBST() {
+        allRestaurants = new ArrayList<>();
+    }
 
     public void insert(Restaurant restaurant) {
         root = insertRec(root, restaurant);
+        allRestaurants.add(restaurant);
     }
 
     private BSTNode insertRec(BSTNode root, Restaurant restaurant) {
@@ -35,5 +46,46 @@ public class RestaurantBST {
             root.restaurant.display();
             inOrderRec(root.right);
         }
+    }
+
+    public void sortByRating() {
+        Collections.sort(allRestaurants, Comparator.comparingDouble(Restaurant::getRating).reversed());
+        displaySortedList();
+    }
+
+    public void sortByPrice() {
+        Collections.sort(allRestaurants, Comparator.comparingDouble(Restaurant::getPriceRange));
+        displaySortedList();
+    }
+
+    public void sortByPopularity() {
+        Collections.sort(allRestaurants, Comparator.comparingInt(Restaurant::getPopularity).reversed());
+        displaySortedList();
+    }
+
+    private void displaySortedList() {
+        for (Restaurant restaurant : allRestaurants) {
+            restaurant.display();
+        }
+    }
+
+    public List<Restaurant> filterByRating(double minRating) {
+        List<Restaurant> filtered = new ArrayList<>();
+        for (Restaurant restaurant : allRestaurants) {
+            if (restaurant.getRating() >= minRating) {
+                filtered.add(restaurant);
+            }
+        }
+        return filtered;
+    }
+
+    public List<Restaurant> filterByPrice(double maxPrice) {
+        List<Restaurant> filtered = new ArrayList<>();
+        for (Restaurant restaurant : allRestaurants) {
+            if (restaurant.getPriceRange() <= maxPrice) {
+                filtered.add(restaurant);
+            }
+        }
+        return filtered;
     }
 }
